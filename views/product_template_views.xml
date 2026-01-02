@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_supersede" model="ir.ui.view">
+        <field name="name">product.template.form.supersede</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Ribbon -->
+            <xpath expr="//sheet" position="inside">
+                <widget name="web_ribbon"
+                        title="Superseded"
+                        bg_color="text-bg-danger"
+                        invisible="not superseded_by_id"/>
+            </xpath>
+
+            <!-- Supersession page -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Supersession" name="supersession_page">
+
+                    <group>
+                        <group>
+                            <field name="superseded_by_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="supersedes_ids" widget="many2many_tags" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <field name="supersede_ids"
+                           nolabel="1"
+                           context="{'default_product_id': product_variant_id}"
+                           domain="[('product_id','=', product_variant_id)]">
+                        <tree editable="bottom" default_order="sequence,id">
+                            <field name="sequence" widget="handle"/>
+                            <field name="relationship_type"/>
+                            <field name="related_product_id"/>
+                            <field name="effective_date"/>
+                            <field name="expiration_date"/>
+                            <field name="state" readonly="1"/>
+                            <field name="notes"/>
+                            <field name="active"/>
+                        </tree>
+                    </field>
+
+                    <!-- Action button (no attrs in v17+) -->
+                    <group>
+                        <button name="action_replace_in_quotations"
+                                type="object"
+                                string="Replace in Quotations"
+                                class="btn-primary"
+                                invisible="not superseded_by_id"/>
+                    </group>
+
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
