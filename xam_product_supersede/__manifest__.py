@@ -25,7 +25,7 @@ Key Features:
         'views/product_supersede_views.xml',
         'views/product_template_views.xml',
     ],
-    'images': ['static/description/icon.png'],
+    'images': ['static/description/icon.png', 'static/description/banner.png',],
     'installable': True,
     'application': True,
     'price': 1500.00,
