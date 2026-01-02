@@ -1,183 +1,422 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Product Supersession & Replacement Management</title>
-  <style>
-    :root{
-      --odoo-purple:#875A7B;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --bg:#ffffff;
-      --card:#f8fafc;
-      --border:#e5e7eb;
-      --ok:#16a34a;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:var(--bg);line-height:1.55}
-    a{color:var(--odoo-purple);text-decoration:none}
-    code{background:rgba(31,41,55,.06);padding:1px 6px;border-radius:7px}
-    .container{max-width:1100px;margin:0 auto;padding:28px 18px 40px}
-    .hero{
-      border:1px solid var(--border);
-      border-radius:16px;
-      overflow:hidden;
-      background:linear-gradient(135deg,#fff, #faf7fb);
-    }
-    .hero-top{
-      padding:22px 22px 16px;
-      display:flex;
-      gap:18px;
-      align-items:flex-start;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .badge{display:inline-block;background:rgba(135,90,123,.12);color:var(--odoo-purple);padding:6px 10px;border-radius:999px;font-weight:700;font-size:13px}
-    h1{margin:10px 0 8px;font-size:30px;line-height:1.2}
-    .subtitle{margin:0;color:var(--muted);max-width:720px}
-    .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .pill{border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 10px;font-size:13px;color:var(--muted)}
-    .hero-img{width:100%;display:block;border-top:1px solid var(--border)}
-    .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:18px}
-    @media(min-width:900px){.grid{grid-template-columns:1.15fr .85fr}}
-    .card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:18px}
-    .card h2{margin:0 0 10px;font-size:18px}
-    ul{margin:0;padding-left:18px}
-    li{margin:7px 0}
-    .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
-    .kpi{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px}
-    .kpi strong{display:block;color:var(--text);font-size:14px}
-    .kpi span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
-    .screens{margin-top:18px}
-    .screens h2{margin:0 0 10px;font-size:18px}
-    .shots{display:grid;grid-template-columns:1fr;gap:14px}
-    @media(min-width:900px){.shots{grid-template-columns:1fr 1fr}}
-    .shot{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#fff}
-    .shot img{width:100%;display:block}
-    .shot .cap{padding:10px 12px;color:var(--muted);font-size:13px;border-top:1px solid var(--border)}
-    .footer{
-      margin-top:22px;
-      padding-top:14px;
-      border-top:1px solid var(--border);
-      color:var(--muted);
-      font-size:13px;
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .check{color:var(--ok);font-weight:800}
-    .small{font-size:12px;color:var(--muted)}
-  </style>
-</head>
-<body>
-  <div class="container">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Product Supersession & Replacement Management</title>
 
-    <section class="hero">
-      <div class="hero-top">
-        <div>
-          <span class="badge">Odoo 17 • Odoo 18 • Odoo 19</span>
-          <h1>Product Supersession &amp; Replacement Management</h1>
-          <p class="subtitle">
-            Manage product supersession, replacement chains, and interchangeable products with strong validations,
-            effective dates, and a seamless product form experience.
+    <style>
+      :root {
+        --odoo-purple: #875a7b;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --bg: #ffffff;
+        --card: #f8fafc;
+        --border: #e5e7eb;
+        --ok: #16a34a;
+        --shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+      }
+
+      /* Odoo Apps page sometimes injects CSS that affects widths.
+       We isolate styling inside .xam-wrap to avoid collisions. */
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        line-height: 1.55;
+      }
+
+      .xam-wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 18px 40px;
+      }
+      a {
+        color: var(--odoo-purple);
+        text-decoration: none;
+      }
+      code {
+        background: rgba(31, 41, 55, 0.06);
+        padding: 1px 6px;
+        border-radius: 7px;
+      }
+
+      /* Strong image safety (prevents overflow / huge widths) */
+      .xam-wrap img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      .xam-wrap .img-round {
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .hero {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #fff, #faf7fb);
+        box-shadow: var(--shadow);
+      }
+      .hero-top {
+        padding: 22px 22px 16px;
+        display: flex;
+        gap: 18px;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .badge {
+        display: inline-block;
+        background: rgba(135, 90, 123, 0.12);
+        color: var(--odoo-purple);
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 13px;
+      }
+      h1 {
+        margin: 10px 0 8px;
+        font-size: 30px;
+        line-height: 1.2;
+      }
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        max-width: 720px;
+      }
+
+      .meta {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      .pill {
+        border: 1px solid var(--border);
+        background: #fff;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* Banner */
+      .banner {
+        border-top: 1px solid var(--border);
+        background: #fff;
+      }
+      .banner img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Two-column section (fixes narrow/tide issue) */
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 18px;
+      }
+      @media (min-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--card);
+        padding: 18px;
+        box-shadow: var(--shadow);
+        min-width: 0; /* important for preventing weird shrink issues */
+      }
+      .card h2 {
+        margin: 0 0 10px;
+        font-size: 18px;
+      }
+      ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+      li {
+        margin: 7px 0;
+      }
+      .check {
+        color: var(--ok);
+        font-weight: 800;
+      }
+
+      /* KPI blocks */
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .kpi {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+        min-width: 0;
+      }
+      .kpi strong {
+        display: block;
+        color: var(--text);
+        font-size: 14px;
+      }
+      .kpi span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 2px;
+      }
+
+      /* Screenshots section */
+      .screens {
+        margin-top: 18px;
+      }
+      .screens h2 {
+        margin: 0 0 10px;
+        font-size: 18px;
+      }
+
+      .shots {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      @media (min-width: 900px) {
+        .shots {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .shot {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: var(--shadow);
+        min-width: 0;
+      }
+      .shot img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .cap {
+        padding: 10px 12px;
+        color: var(--muted);
+        font-size: 13px;
+        border-top: 1px solid var(--border);
+      }
+
+      .footer {
+        margin-top: 22px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 13px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .small {
+        font-size: 12px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="xam-wrap">
+      <section class="hero">
+        <div class="hero-top">
+          <div style="min-width: 280px; max-width: 720px">
+            <span class="badge">Odoo 17 • Odoo 18 • Odoo 19</span>
+            <h1>Product Supersession &amp; Replacement Management</h1>
+            <p class="subtitle">
+              Manage product supersession, replacement chains, and
+              interchangeable products with strong validations, effective dates,
+              and a seamless product form experience.
+            </p>
+            <div class="meta">
+              <span class="pill">✅ Cycle prevention</span>
+              <span class="pill">✅ Automatic reverse links</span>
+              <span class="pill">✅ Effective / Expiration dates</span>
+              <span class="pill">✅ Replace in quotations</span>
+              <span class="pill">✅ Multi-company ready</span>
+            </div>
+          </div>
+
+          <div class="kpis">
+            <div class="kpi">
+              <strong>Primary use</strong>
+              <span>Obsolete product replacement &amp; lifecycle control</span>
+            </div>
+            <div class="kpi">
+              <strong>Supported apps</strong>
+              <span>Product, Inventory, Mail (Sales optional)</span>
+            </div>
+            <div class="kpi">
+              <strong>Security</strong>
+              <span>Access rights included for internal users</span>
+            </div>
+            <div class="kpi">
+              <strong>Quality</strong>
+              <span>Odoo 17+ view compliant &amp; ORM optimized</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Banner (Odoo Apps will use static/description/banner.png too) -->
+        <div class="banner">
+          <img
+            src="banner.png"
+            alt="Product supersession overview banner"
+            loading="lazy"
+          />
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h2>Key Features</h2>
+          <ul>
+            <li>
+              <span class="check">✔</span> Relationship types:
+              <strong>Supersedes</strong>, <strong>Superseded By</strong>,
+              <strong>Interchangeable</strong>.
+            </li>
+            <li>
+              <span class="check">✔</span> Automatic reverse relationship
+              creation and synchronization.
+            </li>
+            <li>
+              <span class="check">✔</span> Prevent circular supersession loops
+              (A → B → A).
+            </li>
+            <li>
+              <span class="check">✔</span> Validity control with
+              <strong>Effective Date</strong> and
+              <strong>Expiration Date</strong>.
+            </li>
+            <li>
+              <span class="check">✔</span> Computed status: Future / Active /
+              Expired.
+            </li>
+            <li>
+              <span class="check">✔</span> Product form integration: dedicated
+              tab + “Superseded” ribbon.
+            </li>
+            <li>
+              <span class="check">✔</span> One-click replacement in
+              <strong>draft/sent quotations</strong> (when Sales is installed).
+            </li>
+            <li>
+              <span class="check">✔</span> Chatter tracking for auditability via
+              <code>mail.thread</code>.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>Typical Use Cases</h2>
+          <ul>
+            <li>SKU replacement and new product versions</li>
+            <li>Engineering revision control</li>
+            <li>Supplier changes and discontinued products</li>
+            <li>Inventory modernization &amp; data governance</li>
+          </ul>
+
+          <h2 style="margin-top: 14px">Technical Notes</h2>
+          <ul>
+            <li>
+              Compatible with Odoo 17+ view rules (no legacy
+              <code>attrs</code>/<code>states</code>).
+            </li>
+            <li>Multi-company aware relationships.</li>
+            <li>Sales integration is optional and safely guarded.</li>
+          </ul>
+
+          <p class="small" style="margin-top: 10px">
+            Need more automation (Purchase, MRP, POS, Website redirects)? This
+            module is designed to be extensible.
           </p>
-          <div class="meta">
-            <span class="pill">✅ Cycle prevention</span>
-            <span class="pill">✅ Automatic reverse links</span>
-            <span class="pill">✅ Effective / Expiration dates</span>
-            <span class="pill">✅ Replace in quotations</span>
-            <span class="pill">✅ Multi-company ready</span>
+        </div>
+      </section>
+
+      <section class="screens">
+        <h2>Screenshots</h2>
+
+        <div class="shots">
+          <div class="shot">
+            <img
+              src="product_supersession.png"
+              alt="Supersession tab on product form"
+              loading="lazy"
+            />
+            <div class="cap">
+              Manage product supersession directly from the product form.
+            </div>
+          </div>
+
+          <div class="shot">
+            <img
+              src="replace_quotation.png"
+              alt="Replace obsolete products in quotations"
+              loading="lazy"
+            />
+            <div class="cap">
+              Replace obsolete products in draft/sent quotations with one click.
+            </div>
+          </div>
+
+          <div class="shot">
+            <img
+              src="supersession_form.png"
+              alt="Supersession relationship form with dates and chatter"
+              loading="lazy"
+            />
+            <div class="cap">
+              Full traceability with effective dates, notes, and chatter audit
+              trail.
+            </div>
+          </div>
+
+          <!-- Use a real 4th screenshot; avoid repeating banner as a screenshot -->
+          <div class="shot">
+            <img
+              src="main_screenshot.png"
+              alt="Supersession overview"
+              loading="lazy"
+            />
+            <div class="cap">
+              Clear visibility: superseded products, replacements, and
+              relationship types.
+            </div>
           </div>
         </div>
-        <div class="kpis">
-          <div class="kpi">
-            <strong>Primary use</strong>
-            <span>Obsolete product replacement & lifecycle control</span>
-          </div>
-          <div class="kpi">
-            <strong>Supported apps</strong>
-            <span>Product, Inventory, Mail (Sales optional)</span>
-          </div>
-          <div class="kpi">
-            <strong>Security</strong>
-            <span>Access rights included for internal users</span>
-          </div>
-          <div class="kpi">
-            <strong>Quality</strong>
-            <span>Odoo 17+ view compliant & ORM optimized</span>
-          </div>
+      </section>
+
+      <div class="footer">
+        <div>
+          <strong>License:</strong> LGPL-3 &nbsp;•&nbsp;
+          <strong>Compatibility:</strong> Odoo 17/18/19
         </div>
+        <div><strong>Publisher:</strong> XAM</div>
       </div>
-
-      <img class="hero-img" src="banner.png" alt="Product supersession overview"/>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h2>Key Features</h2>
-        <ul>
-          <li><span class="check">✔</span> Relationship types: <strong>Supersedes</strong>, <strong>Superseded By</strong>, <strong>Interchangeable</strong>.</li>
-          <li><span class="check">✔</span> Automatic reverse relationship creation and synchronization.</li>
-          <li><span class="check">✔</span> Prevent circular supersession loops (A → B → A).</li>
-          <li><span class="check">✔</span> Validity control with <strong>Effective Date</strong> and <strong>Expiration Date</strong>.</li>
-          <li><span class="check">✔</span> Computed status: Future / Active / Expired.</li>
-          <li><span class="check">✔</span> Product form integration: dedicated tab + “Superseded” ribbon.</li>
-          <li><span class="check">✔</span> One-click replacement in <strong>draft/sent quotations</strong> (when Sales is installed).</li>
-          <li><span class="check">✔</span> Chatter tracking for auditability via <code>mail.thread</code>.</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>Typical Use Cases</h2>
-        <ul>
-          <li>SKU replacement and new product versions</li>
-          <li>Engineering revision control</li>
-          <li>Supplier changes and discontinued products</li>
-          <li>Inventory modernization & data governance</li>
-        </ul>
-
-        <h2 style="margin-top:14px;">Technical Notes</h2>
-        <ul>
-          <li>Compatible with Odoo 17+ view rules (no legacy <code>attrs</code>/<code>states</code>).</li>
-          <li>Multi-company aware relationships.</li>
-          <li>Sales integration is optional and safely guarded.</li>
-        </ul>
-
-        <p class="small" style="margin-top:10px;">
-          Need more automation (Purchase, MRP, POS, Website redirects)? This module is designed to be extensible.
-        </p>
-      </div>
-    </section>
-
-    <section class="screens">
-      <h2>Screenshots</h2>
-      <div class="shots">
-        <div class="shot">
-          <img src="product_supersession.png" alt="Supersession tab on product form"/>
-          <div class="cap">Manage product supersession directly from the product form.</div>
-        </div>
-        <div class="shot">
-          <img src="replace_quotation.png" alt="Replace obsolete products in quotations"/>
-          <div class="cap">Replace obsolete products in draft/sent quotations with one click.</div>
-        </div>
-        <div class="shot">
-          <img src="supersession_form.png" alt="Supersession relationship form with dates and chatter"/>
-          <div class="cap">Full traceability with effective dates, notes, and chatter audit trail.</div>
-        </div>
-        <div class="shot">
-          <img src="banner.png" alt="Overview screenshot"/>
-          <div class="cap">Clear visibility: superseded products, replacements, and relationship types.</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer">
-      <div><strong>License:</strong> LGPL-3 &nbsp;•&nbsp; <strong>Compatibility:</strong> Odoo 17/18/19</div>
-      <div><strong>Publisher:</strong> XAM </div>
     </div>
-
-  </div>
-</body>
+  </body>
 </html>
