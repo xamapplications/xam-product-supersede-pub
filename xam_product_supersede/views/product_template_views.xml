@@ -31,7 +31,7 @@
                            nolabel="1"
                            context="{'default_product_id': product_variant_id}"
                            domain="[('product_id','=', product_variant_id)]">
-                        <tree editable="bottom" default_order="sequence,id">
+                        <list editable="bottom" default_order="sequence,id">
                             <field name="sequence" widget="handle"/>
                             <field name="relationship_type"/>
                             <field name="related_product_id"/>
@@ -40,7 +40,7 @@
                             <field name="state" readonly="1"/>
                             <field name="notes"/>
                             <field name="active"/>
-                        </tree>
+                        </list>
                     </field>
 
                     <!-- Action button (no attrs in v17+) -->
